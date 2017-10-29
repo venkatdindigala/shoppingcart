@@ -27,17 +27,17 @@ export class DataStorageService{
        const token = this.authService.getToken();
        //console.log(token);
     return this.http.get('https://myshoppingcart-eaa2d.firebaseio.com/recipes.json?auth=' + token)
-    .map((response: Response) => {
+    .map(
+        (response: Response) => {
         const recipes: Recipe[] = response.json();
         for(let recipe of recipes){
             if(!recipe['ingredients']){
-                console.log(recipe);
+                //console.log(recipe);
                 recipe['ingredients'] = [];
             }
         }
         return recipes;
-    })
-    .subscribe( (recipes: Recipe[]) =>{
+    }).subscribe( (recipes: Recipe[]) =>{
         this.recipeService.setRecipes(recipes);
      })
 
