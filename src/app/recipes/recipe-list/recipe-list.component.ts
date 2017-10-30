@@ -12,6 +12,7 @@ import { RecipeService } from '../recipe.service'
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
   recipes: Recipe[];
+  subscription: Subscription;
 
   constructor(private recipeService: RecipeService,
               private router: Router,
@@ -20,8 +21,16 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.recipeService.recipeChanged.subscribe(
-      (recipes: Recipe[]) =>{
+    // this.recipeService.recipeChanged.subscribe(
+    //   (recipes: Recipe[]) =>{
+    //     this.recipes = recipes;
+    //   }
+    // );
+    // this.recipes = this.recipeService.getRecipes();
+
+    this.subscription = this.recipeService.recipeChanged
+    .subscribe(
+      (recipes: Recipe[]) => {
         this.recipes = recipes;
       }
     );
@@ -33,6 +42,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     }
 
   ngOnDestroy(){
-   this.recipeService.recipeChanged.unsubscribe();
+   //this.recipeService.recipeChanged.unsubscribe();
+   this.subscription.unsubscribe();
   }
 }
