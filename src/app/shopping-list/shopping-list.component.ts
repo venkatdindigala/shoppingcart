@@ -1,8 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
+//import * as fromShoppingList from './store/shopping-list.reducers';
+import * as ShoppingListActions from './store/shopping-list.actions';
+import * as fromApp from '../store/app.reducers';
 
 @Component({
   selector: 'app-shopping-list',
@@ -10,25 +15,29 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
   styleUrls: ['./shopping-list.component.css']
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
- ingredients : Ingredient[];
- subscription : Subscription;
+ //ingredients : Ingredient[];
+ shoppingListState: Observable<{ingredients: Ingredient[]}>;
+ //subscription : Subscription;
 
-  constructor(private shoppingListService: ShoppingListService) {
+  constructor(private shoppingListService: ShoppingListService,
+              private store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
-    this.ingredients = this.shoppingListService.getIngredients();
-    this.subscription = this.shoppingListService.ingredientChanged.subscribe(
-      (ingredients : Ingredient[]) => {
-        this.ingredients = ingredients;
-      }
-    )
+    //this.ingredients = this.shoppingListService.getIngredients();
+    this.shoppingListState = this.store.select('shoppingList');
+    // this.subscription = this.shoppingListService.ingredientChanged.subscribe(
+    //   (ingredients : Ingredient[]) => {
+    //     this.ingredients = ingredients;
+    //   }
+    // )
   }
   ngOnDestroy(){
-    this.subscription.unsubscribe();
+    //this.subscription.unsubscribe();
   }
 
   onEditItem(id: number){
-    this.shoppingListService.startEditing.next(id);
+    //this.shoppingListService.startEditing.next(id);
+    this.store.dispatch(new ShoppingListActions.StartEdit(id));
   }
 }
