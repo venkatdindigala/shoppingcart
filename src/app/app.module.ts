@@ -24,7 +24,7 @@ import { environment } from './../environments/environment';
     AppComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({appId:'my-universal-app'}),
     AppRoutingModule,
     HttpClientModule,
     //HttpModule,
